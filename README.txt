@@ -1,95 +1,180 @@
-Disclaimer : I'm not responsible if you brick your router in-between the process.
+# Router-Hack
 
-1. Open 192.168.1.1 in any browser
-default username password both is admin
+⚠️ **Disclaimer**:  
+This project is for educational purposes only. I am **not responsible** if you brick your router during the process.
 
-2. Go to Maintenance->backup and restore->export config file on your desktop
-it will be saved as config.cfg
+---
 
-3. Download & install python on your pc
-also download this file(python script) on your desktop
+## Overview
+This repository contains a Python tool (`nokia-router-cfg-tool.py`) and instructions for unlocking hidden settings on certain Nokia routers.  
+It allows you to:
+- Export and decrypt router config files  
+- Enable Telnet/SSH access  
+- Gain root access via terminal  
+- Unlock ISP-restricted settings  
 
+---
 
-4. Open cmd
-type
-python C:\Users\XXXXX\Desktop\Nokia-router-cfg-tool.py (replace xxxxx with your windows user)
+## Requirements
+- A Nokia router (tested on Airtel routers)  
+- Windows PC with [Python](https://www.python.org/downloads/) installed  
+- [MobaXterm Portable](https://mobaxterm.mobatek.net/download.html)  
 
-(4b) now lets decrypt your cfg file first
-type
-python nokia-router-cfg-tool.py -d OYdLWUVDdKQTPaCIeTqniA==
-(4c) now unpack you cfg file to xml
-type
-python nokia-router-cfg-tool.py -u config.cfg
+---
 
-5. A new file is created on your desktop .xml format
-right click & select edit.
+## Steps
 
-(5a) press control+f and type TelnetSshAccount in searchbox then hit enter
+### 1. Export Router Config
+1. Go to `192.168.1.1` in your browser.  
+   - Default username: `admin`  
+   - Default password: `admin`  
+2. Navigate to **Maintenance → Backup and Restore → Export Config File**.  
+3. Save it as `config.cfg` on your desktop.
 
-now change the values same as below
+---
 
-<TelnetSshAccount. n="TelnetSshAccount" t="staticObject">
-<Enable rw="RW" t="boolean" v="True"></Enable>
-<UserName ml="64" rw="RW" t="string" v="admin"></UserName>
-<Password ml="64" rw="RW" t="string" v="OYdLWUVDdKQTPaCIeTqniA==" ealgo="ab"></Password>
+### 2. Setup Environment
+1. Install Python.  
+2. Place `nokia-router-cfg-tool.py` on your desktop.  
+3. Open `cmd` and run:
+   ```bash
+   python C:\Users\XXXXX\Desktop\nokia-router-cfg-tool.py
+````
 
-press control s to save the file & close it
+*(replace `XXXXX` with your Windows username)*
 
-6. Go back to cmd & check for repack command to encrypt the edited xml file back to cfg
-it will look like this something like this :
-type
+---
+
+### 3. Decrypt and Unpack Config
+
+1. Decrypt key:
+
+   ```bash
+   python nokia-router-cfg-tool.py -d OYdLWUVDdKQTPaCIeTqniA==
+   ```
+2. Unpack config:
+
+   ```bash
+   python nokia-router-cfg-tool.py -u config.cfg
+   ```
+3. A `.xml` file will be created on your desktop.
+
+---
+
+### 4. Edit Config
+
+1. Open the XML file in any text editor.
+2. Search (`Ctrl+F`) for **TelnetSshAccount**.
+3. Modify values as below:
+
+   ```xml
+   <TelnetSshAccount. n="TelnetSshAccount" t="staticObject">
+     <Enable rw="RW" t="boolean" v="True"></Enable>
+     <UserName ml="64" rw="RW" t="string" v="admin"></UserName>
+     <Password ml="64" rw="RW" t="string" v="OYdLWUVDdKQTPaCIeTqniA==" ealgo="ab"></Password>
+   </TelnetSshAccount.>
+   ```
+4. Save and close the file.
+
+---
+
+### 5. Repack Config
+
+Run:
+
+```bash
 python nokia-router-cfg-tool.py -ple config-XXXXXXX-XXXXXX.xml 0x4924ea42
+```
 
-(6a) a new cfg file will be created on your desktop.
+A new `.cfg` file will be generated.
 
-7. Now go back to router login page 192.168.1.1
-(7a) go to Maintenance->backup and restore & click "select" then browse newly created cfg file from your desktop then click import
-wait for the router to reboot itself.
+---
 
-8. Now login again 192.168.1.1
-Go to Security->Access control and allow both telent & ssh(Wan & Lan)
+### 6. Import Config
 
-9. Download MobaXterm_Portable_v21.5 link below
-mobaxterm.mobatek.net
-MobaXterm free Xserver and tabbed SSH client for Windows
-The ultimate toolbox for remote computing - includes X server, enhanced SSH client and much more!
-mobaxterm.mobatek.net
+1. Login to router (`192.168.1.1`).
+2. Go to **Maintenance → Backup and Restore**.
+3. Import the new `.cfg` file.
+4. Wait for the router to reboot.
 
-10. Open Mobaxterm & click on Start local terminal
-type
-telnet 192.168.1.1
-user: admin
-password: admin
+---
 
-11. After that lets first copy this in your clipboard: '; /bin/sh; #
-(11a) go back to mobaxterm
-type
-enable
+### 7. Enable Telnet & SSH
 
-type
-shell
+1. Login again (`192.168.1.1`).
+2. Go to **Security → Access Control**.
+3. Allow Telnet and SSH for both **WAN** and **LAN**.
 
-it will ask for password2, press shift+insert button on your keyboard and hit enter
-BOOM now you've root access
+---
 
-(11b) to take the current backup of airtel settings
-type
-cfgcli dump
+### 8. Gain Root Access
 
-type
-ritool dump
-& save the file by going terminal->save terminal text.
+1. Download and run [MobaXterm Portable](https://mobaxterm.mobatek.net).
+2. Start a local terminal.
+3. Connect to router:
 
-(11c) now to unlock settings
-type
-ritool set OperatorID ALCL
+   ```bash
+   telnet 192.168.1.1
+   ```
 
-12. Go back your router login on your browser 192.168.1.1 and BOOOOOOM everything is unlocked, you'll see changes right away
+   * Username: `admin`
+   * Password: `admin`
+4. Run:
 
-Important : If you plan to stick with everything unlocked using airtel fiber then let it as it is.
-Important: If you plan to use this router with any other fiber connection just do a factory reset.
-Doing a factory reset will erase, reset & unlock everything. The default router login address will change to 192.168.1.254 with username AdminGPON and password as ALC#FGU
+   ```bash
+   enable
+   shell
+   ```
 
-I've personally myself tested this whole process & successfully unlocked 3 routers.
+   When asked for `password2`, paste this and hit enter:
 
-I wish you all good health.
+   ```bash
+   '; /bin/sh; #
+   ```
+
+   You now have **root access**.
+
+---
+
+### 9. Useful Commands
+
+* Take backup of Airtel settings:
+
+  ```bash
+  cfgcli dump
+  ritool dump
+  ```
+
+  *(Save the output via terminal → Save text)*
+
+* Unlock settings:
+
+  ```bash
+  ritool set OperatorID ALCL
+  ```
+
+---
+
+### 10. Post-Unlock Notes
+
+* If staying on Airtel Fiber → leave as is.
+* If switching ISPs → do a factory reset.
+
+  * New login will be:
+
+    * IP: `192.168.1.254`
+    * Username: `AdminGPON`
+    * Password: `ALC#FGU`
+
+---
+
+## Author
+
+Tested and documented by **Arsh**.
+Successfully unlocked **3 routers** using this method.
+
+---
+
+## License
+
+This project is provided **AS-IS** with no warranty. Educational use only.
