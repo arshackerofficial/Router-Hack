@@ -39,9 +39,8 @@ It allows you to:
 3. Open `cmd` and run:
    ```bash
    python C:\Users\XXXXX\Desktop\nokia-router-cfg-tool.py
-````
 
-*(replace `XXXXX` with your Windows username)*
+(replace `XXXXX` with your Windows username)
 
 ---
 
@@ -178,3 +177,4 @@ Successfully unlocked **3 routers** using this method.
 ## License
 
 This project is provided **AS-IS** with no warranty. Educational use only.
+
